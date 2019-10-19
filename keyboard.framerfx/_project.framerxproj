@@ -1,0 +1,33 @@
+{
+  "files" : {
+    ".backups/2019-10-20 02.23.41.zip" : {
+      "sha1" : "97f6aHv5SE5rlY7nY3EpNMVlnyQ=",
+      "size" : 6534
+    },
+    ".backups/2019-10-20 02.24.42.zip" : {
+      "sha1" : "YBNL6WF7BU2jrhDmDy7XflCP7Tc=",
+      "size" : 8390
+    },
+    ".backups/2019-10-20 02.25.43.zip" : {
+      "sha1" : "ZRWOtdQWkfAlOQ9ghGTqyyTsOyM=",
+      "size" : 8391
+    },
+    ".backups/2019-10-20 02.26.43.zip" : {
+      "sha1" : "fLmTqbQN689z6I9GeN2C6ps9zyM=",
+      "size" : 8388
+    },
+    "build/index.js" : {
+      "sha1" : "PwR0AABPtOPyIzAouBLIOq2RquE=",
+      "size" : 23860
+    },
+    "code/Keyboard.tsx" : {
+      "sha1" : "dGSBREEWwZ4Ms4iFiVJhtVZiTHo=",
+      "size" : 7091
+    },
+    "design/document.json" : {
+      "sha1" : "srZgGTREI/II73THYarYKoc//0g=",
+      "size" : 143621
+    }
+  },
+  "uuid" : "FDC3BFE0-B409-4142-B2B8-6BF364EDF2FE"
+}
