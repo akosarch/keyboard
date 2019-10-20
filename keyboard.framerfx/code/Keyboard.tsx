@@ -140,7 +140,7 @@ export function Keyboard({
             background={background}
             size="100%"
         >
-            {keyTemp.length ? elements : "Connect keys"}
+            {keyTemp ? elements : "Connect keys"}
         </Frame>
     )
 }
