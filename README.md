@@ -1,7 +1,7 @@
 # Keyboard
 This Framer X component gives you the functional keyboard which can be fully customized: from the appearance of the different keys to the layout and behavior. 
 
-This package contains the single code component (the keyboard itself) and multiple design components for the keys. Just connect them to the keyboard and you're locked and loaded.
+This package contains the single code component (the keyboard itself) and multiple design components for the keys. Just connect them to the keyboard and you're locked and loaded. Download [example file](https://github.com/akosarch/keyboard/tree/master/keyboard.framerfx) for the reference.
 
 If you like the component and want to contribute or leave feedback hit me via [FACEBOOK](https://www.facebook.com/anton.kosarchyn), [SPECTRUM](https://spectrum.chat/users/anton-kosarchyn) or [GITHUB](https://github.com/akosarch/keyboard)
 
@@ -14,7 +14,7 @@ Sometimes you'd like to use the native mobile keyboard in your prototypes, but s
 1. Drag the keyboard to the canvas. 
 2. Drag the design components to the canvas and connect to the appropriate nodes of the keyboard.
 3. Use a simple override to obtain typed value.
-4. Customize keyboard if needed (*for nerds*)
+4. Customize keyboard if needed (*for nerds*) 🤓
 5. Profit x999 😱
 
 ### Props
@@ -185,6 +185,6 @@ It's written as a set of symbols separated with spaces. Mostly symbols represent
 | `mod1_a...b` | Dedicated keys to mod1. Toggles the mod1   |
 | `mod2_a...d` | Dedicated keys to mod2. Toggles the mod2   |
 
-Some of this behavior could be extended/changed by applying overrides to the design elements. Eg you can change the behaviour for the `return` key so instead of the line break, it could submit some value. See the [example file]() for the reference.
+Some of this behavior could be extended/changed by applying overrides to the design elements. Eg you can change the behaviour for the `return` key so instead of the line break, it could submit some value. See the [example file](https://github.com/akosarch/keyboard/tree/master/keyboard.framerfx) for the reference.
 
 You have probably noticed the `--` symbol and a number after it. This notation defines a **ratio of a key** relative to the other keys in a row. So If you see the `space--5` it means to render a space key 5 times wider than a single key. If the number is omitted – ratio 1 will be applied for that key. Think of it as of [flex-grow](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow) if you're familiar with CSS Flexbox. You can also **skip the value** but specify a ratio like this `--2`. In that case an empty spacer element will be rendered with a width set to 2.
