@@ -9,7 +9,10 @@
 		"react": "^16.8"
 	},
 	"framer": {
-		"id": "3975d311-78b1-4c43-9f37-01f58e412d31"
+		"id": "3975d311-78b1-4c43-9f37-01f58e412d31",
+		"displayName": "Mobile Keyboard"
 	},
-	"author": "Anton Kosarchyn"
+	"author": "Anton Kosarchyn",
+	"name": "@framer/martiankid.mobile-keyboard",
+	"version": "1.0.0"
 }

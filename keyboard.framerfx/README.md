@@ -33,7 +33,7 @@ Sometimes you'd like to use the native mobile keyboard in your prototypes, but s
 | `setMod1`         | Switches the active keyboard layout to the desired first-mode: `m1` or `m2` |
 | `setMod2`         | Switches the active keyboard layout to the desired second-mode: `a` or `b` |
 
-###Overrides
+### Overrides
 
 #### Get value from the keyboard
 
