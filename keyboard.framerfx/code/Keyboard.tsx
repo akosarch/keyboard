@@ -4,37 +4,54 @@ import { Frame, addPropertyControls, ControlType, useCycle } from "framer"
 
 export function Keyboard({
     gap,
+    setMod1,
+    setMod2,
+    widthType,
+    keyWidth,
     keyHeight,
     background,
-    initValue,
+    initialValue,
     onValueChange,
     customKeys,
     templates,
     template,
+    customTemplate,
+    customTemplateUrl,
     keyTemp,
     backspaceTemp,
     spaceTemp,
     returnTemp,
     ...rest
 }) {
-    const [value, setValue] = useState(initValue)
+    const [value, setValue] = useState(initialValue)
     const [elements, setElements] = useState([])
-    const [mod1, cycleMod1] = useCycle(0, 1)
-    const [mod2, cycleMod2] = useCycle(0, 1)
+    const [mod1, cycleMod1] = useCycle("m1", "m2")
+    const [mod2, cycleMod2] = useCycle("a", "b")
+
+    if (customTemplateUrl) {
+        fetch(customTemplateUrl)
+            .then(response => response.json())
+            .then(json => (customTemplate = json))
+    }
 
     // render elements
     useEffect(() => {
-        const { keys, inRow } = templates[template]
-        const elem = keys[mod1][mod2].split(" ").map((key, i) => {
+        const temp =
+            template === "custom" ? customTemplate : templates[template]
+        const { keys, inRow } = temp
+        const elem = keys[mod1 + mod2].split(" ").map((key, i) => {
             let [val, ratio = 1] = key.split("--")
             return (
                 <Frame
                     key={i}
                     style={{
-                        height: keyHeight,
                         background: null,
                         position: "relative",
-                        width: `calc(((100% / ${inRow}) * ${ratio})`,
+                        height: keyHeight + gap,
+                        width:
+                            widthType === "auto"
+                                ? `calc(((100% / ${inRow}) * ${ratio})`
+                                : (keyWidth + gap) * ratio,
                         padding: gap / 2,
                     }}
                 >
@@ -43,12 +60,32 @@ export function Keyboard({
             )
         })
         setElements(elem)
-    }, [template, mod1, mod2, keyTemp, backspaceTemp, spaceTemp, returnTemp])
+    }, [
+        template,
+        customTemplate,
+        mod1,
+        mod2,
+        keyTemp,
+        backspaceTemp,
+        spaceTemp,
+        returnTemp,
+    ])
 
     // callback on value change
     useEffect(() => {
         onValueChange(value)
     }, [value])
+
+    // callback on value change
+    useEffect(() => {
+        setValue(initialValue)
+    }, [initialValue])
+
+    // callback on mod change
+    useEffect(() => {
+        setMod1 && cycleMod1(setMod1)
+        setMod2 && cycleMod2(setMod2)
+    }, [setMod1, setMod2])
 
     function addValue(val) {
         setValue(value => value + val)
@@ -56,14 +93,6 @@ export function Keyboard({
 
     function removeValue() {
         setValue(value => value.substring(0, value.length - 1))
-    }
-
-    function toggleMod1() {
-        cycleMod1()
-    }
-
-    function toggleMod2() {
-        cycleMod2()
     }
 
     function renderTemplate(val, i) {
@@ -92,6 +121,9 @@ export function Keyboard({
                 return returnTemp[0]
                     ? React.cloneElement(returnTemp[0], {
                           style: keyStyle,
+                          onTap() {
+                              addValue("\n")
+                          },
                       })
                     : undefined
             case "mod1_a":
@@ -100,7 +132,7 @@ export function Keyboard({
                     ? React.cloneElement(rest[val][0], {
                           style: keyStyle,
                           onTap() {
-                              toggleMod1()
+                              cycleMod1()
                           },
                       })
                     : undefined
@@ -112,7 +144,7 @@ export function Keyboard({
                     ? React.cloneElement(rest[val][0], {
                           style: keyStyle,
                           onTap() {
-                              toggleMod2()
+                              cycleMod2()
                           },
                       })
                     : undefined
@@ -134,6 +166,7 @@ export function Keyboard({
                 display: "flex",
                 flexWrap: "wrap",
                 alignItems: "center",
+                justifyContent: "center",
                 padding: gap / 2,
                 color: "#999",
             }}
@@ -146,37 +179,37 @@ export function Keyboard({
 }
 
 const keyStyle = {
+    height: "100%",
     width: "100%",
     boxSizing: "border-box",
     position: "relative",
 }
 
 Keyboard.defaultProps = {
-    initValue: "",
+    initialValue: "",
     height: 128,
     width: 240,
     gap: 6,
     itemHeight: 48,
-    keysInRow: 3,
     background: "#EBEBEB",
-    onValueChange(value: number) {},
+    onValueChange(value: string) {},
+    customTemplateUrl: "",
+    customTemplate: { keys: { m1a: "a b c" }, inRow: 3 },
     template: "numeric-iOS",
     templates: {
         numeric_iOS: {
-            keys: [["1 2 3 4 5 6 7 8 9 0 00 backspace"]],
+            keys: {
+                m1a: "1 2 3 4 5 6 7 8 9 0 00 backspace",
+            },
             inRow: 3,
         },
         text_iOS: {
-            keys: [
-                [
-                    `q w e r t y u i o p --.5 a s d f g h j k l --.5 mod2_a--1.25 --.25 z x c v b n m --.25 backspace--1.25 mod1_a--2.5 space--5 return--2.5`,
-                    `Q W E R T Y U I O P --.5 A S D F G H J K L --.5 mod2_b--1.25 --.25 Z X C V B N M --.25 backspace--1.25 mod1_a--2.5 space--5 return--2.5`,
-                ],
-                [
-                    `1 2 3 4 5 6 7 8 9 0 - / : ; ( ) $ & @ " mod2_c--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 mod1_b--2.5 space--5 return--2.5`,
-                    `[ ] { } # % ^ * + = _ / | ~ < > € $ £ ∙ mod2_d--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 mod1_b--2.5 space--5 return--2.5`,
-                ],
-            ],
+            keys: {
+                m1a: `q w e r t y u i o p --.5 a s d f g h j k l --.5 mod2_a--1.25 --.25 z x c v b n m --.25 backspace--1.25 mod1_a--2.5 space--5 return--2.5`,
+                m1b: `Q W E R T Y U I O P --.5 A S D F G H J K L --.5 mod2_b--1.25 --.25 Z X C V B N M --.25 backspace--1.25 mod1_a--2.5 space--5 return--2.5`,
+                m2a: `1 2 3 4 5 6 7 8 9 0 - / : ; ( ) $ & @ " mod2_c--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 mod1_b--2.5 space--5 return--2.5`,
+                m2b: `[ ] { } # % ^ * + = _ / | ~ < > € $ £ ∙ mod2_d--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 mod1_b--2.5 space--5 return--2.5`,
+            },
             inRow: 10,
         },
     },
@@ -189,6 +222,25 @@ addPropertyControls(Keyboard, {
         defaultValue: "numeric_iOS",
         options: ["numeric_iOS", "text_iOS", "custom"],
         optionTitles: ["Numeric iOS", "Text iOS", "Custom"],
+    },
+    customTemplateUrl: {
+        hidden: ({ template }) => template !== "custom",
+        title: "Custom",
+        type: ControlType.File,
+        allowedFileTypes: ["json"],
+    },
+    widthType: {
+        title: "Width type",
+        type: ControlType.SegmentedEnum,
+        defaultValue: "auto",
+        options: ["auto", "custom"],
+        optionTitles: ["Auto", "Custom"],
+    },
+    keyWidth: {
+        hidden: ({ widthType }) => widthType !== "custom",
+        title: "Key width",
+        type: ControlType.Number,
+        defaultValue: 48,
     },
     keyHeight: {
         title: "Key height",
