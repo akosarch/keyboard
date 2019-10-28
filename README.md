@@ -17,6 +17,11 @@ Sometimes you'd like to use the native mobile keyboard in your prototypes, but s
 4. Customize keyboard if needed (*for nerds*) 🤓
 5. Profit x999 😱
 
+### Known issues and updates
+
+The keyboard component doesn't work with the included key component. The issue is under investigation.
+As a **temporary solution** you can creat your own design key component , turn on text override and name it `value`. 
+
 ### Props
 
 | Property          | Description                                                  |
@@ -136,7 +141,7 @@ In general, template is a set of single/couple keyboard layouts (mods) defined w
     },
     inRow: 10,
 }
-// Note: this is written in .jsx format
+// Note: this is written in .js format
 // For the .json you should wrap each property with a "" so the keys becomes "keys" etc
 ```
 
