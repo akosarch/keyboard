@@ -38,12 +38,12 @@ export function HandleKeyboard(props): Override {
         onValueChange(value) {
             data.currQuery = value
         },
-        // customTemplate: {
-        //     keys: {
-        //         m1a: "7 8 9 backspace return 4 5 6 + - 1 2 3 * / 0--2 . ( )",
-        //     },
-        //     inRow: 4,
-        // },
+        customTemplate: {
+            keys: {
+                m1a: "7 8 9 backspace return 4 5 6 + - 1 2 3 * / 0--2 . ( )",
+            },
+            inRow: 4,
+        },
     }
 }
 

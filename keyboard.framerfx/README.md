@@ -12,17 +12,26 @@ Sometimes you'd like to use the native mobile keyboard in your prototypes, but s
 ### How to use
 
 1. Drag the keyboard to the canvas. 
-2. Drag the design components to the canvas and connect to the appropriate nodes of the keyboard.
+2. Drag the design components to the canvas and connect to the `Keys templates` section of the keyboard.
 3. Use a simple override to obtain typed value.
 4. Customize keyboard if needed (*for nerds*) 🤓
 5. Profit x999 😱
 
-### Known issues and updates
+#### Special key names
 
-The keyboard component doesn't work with the included key component. The issue is under investigation.
-As a **temporary solution** you can creat your own design key component , turn on text override and name it `value`. 
+To use built in functionality you should give your keys special names. 
+You can use custom keys as well. See the **Customization** section for the details.
 
-### Props
+| Special name               | Description                                                  |
+| -------------------------- | ------------------------------------------------------------ |
+| `value`                    | This one will be used to render the regural key values like numbers and letters. Also this one should be converted to the **design component with a text override** turned on and named `value`. |
+| `space`                    | Adds a space on tap. Equalt to ` `.                          |
+| `return`                   | Breaks the line by default. Equals to `/n`.                  |
+| `backspace`                | Removes the last sybol from the string.                      |
+| `m1` , `m2`                | Functional keys to toggle between mods.                      |
+| `m1a`, `m1b`, `m2a`, `m2b` | Functional keys to toggle between sub-modes of a current mode. |
+
+### Keyboard props
 
 | Property          | Description                                                  |
 | ----------------- | ------------------------------------------------------------ |
@@ -35,8 +44,8 @@ As a **temporary solution** you can creat your own design key component , turn o
 | `background`      | Defines the background color of the keyboard.                |
 | `initialValue`    | Sets the initial value of the keyboard.                      |
 | `onValueChange()` | Callback that returns a modified value.                      |
-| `setMod1`         | Switches the active keyboard layout to the desired first-mode: `m1` or `m2` |
-| `setMod2`         | Switches the active keyboard layout to the desired second-mode: `a` or `b` |
+| `setMod`          | Switches the active keyboard layout to the desired mode: `m1` or `m2` |
+| `setSub`          | Switches the active keyboard layout to the desired sub-mode: `a` or `b` |
 
 ### Overrides
 
@@ -89,9 +98,9 @@ const data = Data({
 export function HandleKeyboard(props): Override {
     return {
         // Switch layout to letters
-        setMod1: "m1", 
+        setMod: "m1", 
         // Start from the capital letter
-        setMod2: data.text ? "a" : "b",
+        setSub: data.text ? "a" : "b",
         onValueChange(value) {
             data.text = value
         },
@@ -134,12 +143,12 @@ In general, template is a set of single/couple keyboard layouts (mods) defined w
 ```jsx
 {
     keys: {
-        m1a: `q w e r t y u i o p --.5 a s d f g h j k l --.5 mod2_a--1.25 --.25 z x c v b n m --.25 backspace--1.25 mod1_a--2.5 space--5 return--2.5`,
-        m1b: `Q W E R T Y U I O P --.5 A S D F G H J K L --.5 mod2_b--1.25 --.25 Z X C V B N M --.25 backspace--1.25 mod1_a--2.5 space--5 return--2.5`,
-        m2a: `1 2 3 4 5 6 7 8 9 0 - / : ; ( ) $ & @ " mod2_c--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 mod1_b--2.5 space--5 return--2.5`,
-        m2b: `[ ] { } # % ^ * + = _ / | ~ < > € $ £ ∙ mod2_d--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 mod1_b--2.5 space--5 return--2.5`,
+        m1a: `q w e r t y u i o p --.5 a s d f g h j k l --.5 m1a--1.25 --.25 z x c v b n m --.25 backspace--1.25 m1--2.5 space--5 return--2.5`,
+        m1b: `Q W E R T Y U I O P --.5 A S D F G H J K L --.5 m1b--1.25 --.25 Z X C V B N M --.25 backspace--1.25 m1--2.5 space--5 return--2.5`,
+        m2a: `1 2 3 4 5 6 7 8 9 0 - / : ; ( ) $ & @ " m2a--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 m2--2.5 space--5 return--2.5`,
+        m2b: `[ ] { } # % ^ * + = _ / | ~ < > € $ £ ∙ m2b--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 m2--2.5 space--5 return--2.5`
     },
-    inRow: 10,
+    inRow: 10
 }
 // Note: this is written in .js format
 // For the .json you should wrap each property with a "" so the keys becomes "keys" etc
@@ -150,7 +159,7 @@ It might look complex at a glance, but it's not! Let's break it apart:
 ```jsx
 {
     keys: {}, // Holds all the keys information like the key-value and its ratio
-    inRow: 10, // Defines the maximum number of keys in a row
+    inRow: 10 // Defines the maximum number of keys in a row
 }
 ```
 
@@ -177,19 +186,25 @@ Now get it? But what are those `m1a`,  `m1b`,  `m2a`,  `m2b` ? Those are what I 
 Now once we're good with the template structure in general, let's take a look at a single layout:
 
 ```jsx
-`q w e r t y u i o p --.5 a s d f g h j k l --.5 mod2_a--1.25 --.25 z x c v b n m --.25 backspace--1.25 mod1_a--2.5 space--5 return--2.5`
+`q w e r t y u i o p --.5 a s d f g h j k l --.5 m1a--1.25 --.25 z x c v b n m --.25 backspace--1.25 m1--2.5 space--5 return--2.5`
 ```
 
-It's written as a set of symbols separated with spaces. Mostly symbols represent key values like `q w e`, except the specials which reference the keys with the special functionality. In general, the specials are the following:
-
-| Special name | Description                                |
-| ------------ | ------------------------------------------ |
-| `space`      | Adds a space on tap. Equalt to " ".        |
-| `return`     | Breaks the line by default. Equals to "/n" |
-| `backspace`  | Removes the last sybol from the string.    |
-| `mod1_a...b` | Dedicated keys to mod1. Toggles the mod1   |
-| `mod2_a...d` | Dedicated keys to mod2. Toggles the mod2   |
-
-Some of this behavior could be extended/changed by applying overrides to the design elements. Eg you can change the behaviour for the `return` key so instead of the line break, it could submit some value. See the [example file](https://github.com/akosarch/keyboard/tree/master/keyboard.framerfx) for the reference.
+It's written as a set of symbols separated with spaces. Mostly symbols represent key values like `q w e`, except the specials which reference the keys with the special functionality (see the top section). 
 
 You have probably noticed the `--` symbol and a number after it. This notation defines a **ratio of a key** relative to the other keys in a row. So If you see the `space--5` it means to render a space key 5 times wider than a single key. If the number is omitted – ratio 1 will be applied for that key. Think of it as of [flex-grow](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow) if you're familiar with CSS Flexbox. You can also **skip the value** but specify a ratio like this `--2`. In that case an empty spacer element will be rendered with a width set to 2.
+
+#### Using custom keys
+
+You can use just any number of **custom keys** beside the default one. Just name custom keys properly and include those names into the layout template as described above.
+
+### Known issues and updates
+
+The keyboard component doesn't work with the included key component. The issue is under investigation.
+As a **temporary solution** you can creat your own design key component, turn on text override and name it `value` as well.
+
+#### Updates
+
+##### November 23, 2019
+
+- Added support for the `custom keys`
+- Removed the need to plug each key to the separate keyboard node. Just use the `Keys templates` section of the component to plug all the keys you want to use. Just don't forget to name your keys properly first!

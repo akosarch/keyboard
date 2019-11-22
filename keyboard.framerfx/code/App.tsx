@@ -27,7 +27,7 @@ export function HandlePlaceholder(props): Override {
 
 export function HandleKeyboard(props): Override {
     return {
-        setMod2: data.text ? "a" : "b", // start from capital letter
+        setSub: data.text ? "a" : "b", // start from capital letter
         onValueChange(value) {
             data.text = value
         },

@@ -4,8 +4,8 @@ import { Frame, addPropertyControls, ControlType, useCycle } from "framer"
 
 export function Keyboard({
     gap,
-    setMod1,
-    setMod2,
+    setMod,
+    setSub,
     widthType,
     keyWidth,
     keyHeight,
@@ -17,16 +17,12 @@ export function Keyboard({
     template,
     customTemplate,
     customTemplateUrl,
-    keyTemp,
-    backspaceTemp,
-    spaceTemp,
-    returnTemp,
-    ...rest
+    keysTemplates,
 }) {
     const [value, setValue] = useState(initialValue)
     const [elements, setElements] = useState([])
-    const [mod1, cycleMod1] = useCycle("m1", "m2")
-    const [mod2, cycleMod2] = useCycle("a", "b")
+    const [mod, cycleMod] = useCycle("m1", "m2")
+    const [sub, cycleSub] = useCycle("a", "b")
 
     if (customTemplateUrl) {
         fetch(customTemplateUrl)
@@ -39,7 +35,7 @@ export function Keyboard({
         const temp =
             template === "custom" ? customTemplate : templates[template]
         const { keys, inRow } = temp
-        const elem = keys[mod1 + mod2].split(" ").map((key, i) => {
+        const elem = keys[mod + sub].split(" ").map((key, i) => {
             let [val, ratio = 1] = key.split("--")
             return (
                 <Frame
@@ -60,16 +56,7 @@ export function Keyboard({
             )
         })
         setElements(elem)
-    }, [
-        template,
-        customTemplate,
-        mod1,
-        mod2,
-        keyTemp,
-        backspaceTemp,
-        spaceTemp,
-        returnTemp,
-    ])
+    }, [template, customTemplate, mod, sub, keysTemplates])
 
     // callback on value change
     useEffect(() => {
@@ -83,9 +70,9 @@ export function Keyboard({
 
     // callback on mod change
     useEffect(() => {
-        setMod1 && cycleMod1(setMod1)
-        setMod2 && cycleMod2(setMod2)
-    }, [setMod1, setMod2])
+        setMod && cycleMod(setMod)
+        setSub && cycleSub(setSub)
+    }, [setMod, setSub])
 
     function addValue(val) {
         setValue(value => value + val)
@@ -95,13 +82,23 @@ export function Keyboard({
         setValue(value => value.substring(0, value.length - 1))
     }
 
+    function findTemplate(templates, name) {
+        return templates.filter(element => {
+            const elementName = element.props.name.split("/").pop()
+            return elementName === name
+        })
+    }
+
     function renderTemplate(val, i) {
+        let keyTemplate
         switch (val) {
             case "":
-                break
+                return undefined
+
             case "backspace":
-                return backspaceTemp[0]
-                    ? React.cloneElement(backspaceTemp[0], {
+                keyTemplate = findTemplate(keysTemplates, val)
+                return keyTemplate[0]
+                    ? React.cloneElement(keyTemplate[0], {
                           style: keyStyle,
                           onTap() {
                               removeValue()
@@ -109,8 +106,9 @@ export function Keyboard({
                       })
                     : undefined
             case "space":
-                return spaceTemp[0]
-                    ? React.cloneElement(spaceTemp[0], {
+                keyTemplate = findTemplate(keysTemplates, val)
+                return keyTemplate[0]
+                    ? React.cloneElement(keyTemplate[0], {
                           style: keyStyle,
                           onTap() {
                               addValue(" ")
@@ -118,39 +116,43 @@ export function Keyboard({
                       })
                     : undefined
             case "return":
-                return returnTemp[0]
-                    ? React.cloneElement(returnTemp[0], {
+                keyTemplate = findTemplate(keysTemplates, val)
+                return keyTemplate[0]
+                    ? React.cloneElement(keyTemplate[0], {
                           style: keyStyle,
                           onTap() {
                               addValue("\n")
                           },
                       })
                     : undefined
-            case "mod1_a":
-            case "mod1_b":
-                return rest[val][0]
-                    ? React.cloneElement(rest[val][0], {
+            case "m1":
+            case "m2":
+                keyTemplate = findTemplate(keysTemplates, val)
+                return keyTemplate[0]
+                    ? React.cloneElement(keyTemplate[0], {
                           style: keyStyle,
                           onTap() {
-                              cycleMod1()
+                              cycleMod()
                           },
                       })
                     : undefined
-            case "mod2_a":
-            case "mod2_b":
-            case "mod2_c":
-            case "mod2_d":
-                return rest[val][0]
-                    ? React.cloneElement(rest[val][0], {
+            case "m1a":
+            case "m1b":
+            case "m2a":
+            case "m2b":
+                keyTemplate = findTemplate(keysTemplates, val)
+                return keyTemplate[0]
+                    ? React.cloneElement(keyTemplate[0], {
                           style: keyStyle,
                           onTap() {
-                              cycleMod2()
+                              cycleSub()
                           },
                       })
                     : undefined
             default:
-                return keyTemp[0]
-                    ? React.cloneElement(keyTemp[0], {
+                keyTemplate = findTemplate(keysTemplates, "value")
+                return keyTemplate[0]
+                    ? React.cloneElement(keyTemplate[0], {
                           style: keyStyle,
                           value: val,
                           onTap() {
@@ -165,6 +167,7 @@ export function Keyboard({
             style={{
                 display: "flex",
                 flexWrap: "wrap",
+                flexFlow: "column-wrap",
                 alignItems: "center",
                 justifyContent: "center",
                 padding: gap / 2,
@@ -173,7 +176,7 @@ export function Keyboard({
             background={background}
             size="100%"
         >
-            {keyTemp ? elements : "Connect keys"}
+            {keysTemplates[0] ? elements : "Connect keys"}
         </Frame>
     )
 }
@@ -205,10 +208,10 @@ Keyboard.defaultProps = {
         },
         text_iOS: {
             keys: {
-                m1a: `q w e r t y u i o p --.5 a s d f g h j k l --.5 mod2_a--1.25 --.25 z x c v b n m --.25 backspace--1.25 mod1_a--2.5 space--5 return--2.5`,
-                m1b: `Q W E R T Y U I O P --.5 A S D F G H J K L --.5 mod2_b--1.25 --.25 Z X C V B N M --.25 backspace--1.25 mod1_a--2.5 space--5 return--2.5`,
-                m2a: `1 2 3 4 5 6 7 8 9 0 - / : ; ( ) $ & @ " mod2_c--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 mod1_b--2.5 space--5 return--2.5`,
-                m2b: `[ ] { } # % ^ * + = _ / | ~ < > € $ £ ∙ mod2_d--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 mod1_b--2.5 space--5 return--2.5`,
+                m1a: `q w e r t y u i o p --.5 a s d f g h j k l --.5 m1a--1.25 --.25 z x c v b n m --.25 backspace--1.25 m1--2.5 space--5 return--2.5`,
+                m1b: `Q W E R T Y U I O P --.5 A S D F G H J K L --.5 m1b--1.25 --.25 Z X C V B N M --.25 backspace--1.25 m1--2.5 space--5 return--2.5`,
+                m2a: `1 2 3 4 5 6 7 8 9 0 - / : ; ( ) $ & @ " m2a--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 m2--2.5 space--5 return--2.5`,
+                m2b: `[ ] { } # % ^ * + = _ / | ~ < > € $ £ ∙ m2b--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 m2--2.5 space--5 return--2.5`,
             },
             inRow: 10,
         },
@@ -257,44 +260,9 @@ addPropertyControls(Keyboard, {
         type: ControlType.Color,
         defaultValue: "#EBEBEB",
     },
-    keyTemp: {
-        title: "Key",
-        type: ControlType.ComponentInstance,
-    },
-    backspaceTemp: {
-        title: "Backspace",
-        type: ControlType.ComponentInstance,
-    },
-    spaceTemp: {
-        title: "Space",
-        type: ControlType.ComponentInstance,
-    },
-    returnTemp: {
-        title: "Return",
-        type: ControlType.ComponentInstance,
-    },
-    mod1_a: {
-        title: "Mod 1 a",
-        type: ControlType.ComponentInstance,
-    },
-    mod1_b: {
-        title: "Mod 1 b",
-        type: ControlType.ComponentInstance,
-    },
-    mod2_a: {
-        title: "Mod 2 a",
-        type: ControlType.ComponentInstance,
-    },
-    mod2_b: {
-        title: "Mod 2 b",
-        type: ControlType.ComponentInstance,
-    },
-    mod2_c: {
-        title: "Mod 2 c",
-        type: ControlType.ComponentInstance,
-    },
-    mod2_d: {
-        title: "Mod 2 d",
-        type: ControlType.ComponentInstance,
+    keysTemplates: {
+        title: "Keys templates",
+        type: ControlType.Array,
+        propertyControl: { type: ControlType.ComponentInstance },
     },
 })
