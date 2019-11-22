@@ -724,7 +724,7 @@ exports.__framer__ = packageInfo
 /*! exports provided: main, license, devDependencies, peerDependencies, framer, author, name, version, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"main\":\"dist/index.js\",\"license\":\"MIT\",\"devDependencies\":{\"@types/react\":\"^16.8\"},\"peerDependencies\":{\"framer\":\"^1.0\",\"react\":\"^16.8\"},\"framer\":{\"id\":\"3975d311-78b1-4c43-9f37-01f58e412d31\",\"displayName\":\"Mobile Keyboard\"},\"author\":\"Anton Kosarchyn\",\"name\":\"@framer/martiankid.mobile-keyboard\",\"version\":\"1.1.0\"}");
+module.exports = JSON.parse("{\"main\":\"dist/index.js\",\"license\":\"MIT\",\"devDependencies\":{\"@types/react\":\"^16.8\"},\"peerDependencies\":{\"framer\":\"^1.0\",\"react\":\"^16.8\"},\"framer\":{\"id\":\"3975d311-78b1-4c43-9f37-01f58e412d31\",\"displayName\":\"Mobile Keyboard\"},\"author\":\"Anton Kosarchyn\",\"name\":\"@framer/martiankid.mobile-keyboard\",\"version\":\"1.2.0\"}");
 
 /***/ }),
 
