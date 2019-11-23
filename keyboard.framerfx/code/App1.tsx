@@ -40,7 +40,7 @@ export function HandleKeyboard(props): Override {
         },
         customTemplate: {
             keys: {
-                m1a: "7 8 9 backspace return 4 5 6 + - 1 2 3 * / 0--2 . ( )",
+                m1a: "7 8 9 $backspace $return 4 5 6 + - 1 2 3 * / 0--2 . ( )",
             },
             inRow: 4,
         },

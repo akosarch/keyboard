@@ -22,16 +22,16 @@ Sometimes you'd like to use the native mobile keyboard in your prototypes, but s
 To use built in functionality you should give your keys special names. 
 You can use custom keys as well. See the **Customization** section for the details.
 
-| Special name               | Description                                                  |
-| -------------------------- | ------------------------------------------------------------ |
-| `value`                    | This one will be used to render the regural key values like numbers and letters. Also this one should be converted to the **design component with a text override** turned on and named `value`. |
-| `space`                    | Adds a space on tap. Equalt to ` `.                          |
-| `return`                   | Breaks the line by default. Equals to `/n`.                  |
-| `backspace`                | Removes the last sybol from the string.                      |
-| `m1` , `m2`                | Functional keys to toggle between mods.                      |
-| `m1a`, `m1b`, `m2a`, `m2b` | Functional keys to toggle between sub-modes of a current mode. |
+| Special name                   | Description                                                  |
+| ------------------------------ | ------------------------------------------------------------ |
+| `$value`                       | This one will be used to render the regural key values like numbers and letters. Also this one should be converted to the **design component with a text override** turned on and named `value`. |
+| `$space`                       | Adds a space on tap. Equalt to ` `.                          |
+| `$return`                      | Breaks the line by default. Equals to `/n`.                  |
+| `$backspace`                   | Removes the last sybol from the string.                      |
+| `$m1` , `$m2`                  | Functional keys to toggle between mods.                      |
+| `$m1a`, `$m1b`, `$m2a`, `$m2b` | Functional keys to toggle between sub-modes of a current mode. |
 
-### Keyboard props
+#### Keyboard props
 
 | Property          | Description                                                  |
 | ----------------- | ------------------------------------------------------------ |
@@ -143,10 +143,10 @@ In general, template is a set of single/couple keyboard layouts (mods) defined w
 ```jsx
 {
     keys: {
-        m1a: `q w e r t y u i o p --.5 a s d f g h j k l --.5 m1a--1.25 --.25 z x c v b n m --.25 backspace--1.25 m1--2.5 space--5 return--2.5`,
-        m1b: `Q W E R T Y U I O P --.5 A S D F G H J K L --.5 m1b--1.25 --.25 Z X C V B N M --.25 backspace--1.25 m1--2.5 space--5 return--2.5`,
-        m2a: `1 2 3 4 5 6 7 8 9 0 - / : ; ( ) $ & @ " m2a--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 m2--2.5 space--5 return--2.5`,
-        m2b: `[ ] { } # % ^ * + = _ / | ~ < > € $ £ ∙ m2b--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 m2--2.5 space--5 return--2.5`
+        m1a: `q w e r t y u i o p --.5 a s d f g h j k l --.5 $m1a--1.25 --.25 z x c v b n m --.25 $backspace--1.25 $m1--2.5 $space--5 $return--2.5`,
+        m1b: `Q W E R T Y U I O P --.5 A S D F G H J K L --.5 $m1b--1.25 --.25 Z X C V B N M --.25 $backspace--1.25 $m1--2.5 $space--5 $return--2.5`,
+        m2a: `1 2 3 4 5 6 7 8 9 0 - / : ; ( ) $ & @ " $m2a--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 $backspace--1.25 $m2--2.5 $space--5 $return--2.5`,
+        m2b: `[ ] { } # % ^ * + = _ / | ~ < > € $ £ ∙ $m2b--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 $backspace--1.25 $m2--2.5 $space--5 $return--2.5`
     },
     inRow: 10
 }
@@ -186,16 +186,16 @@ Now get it? But what are those `m1a`,  `m1b`,  `m2a`,  `m2b` ? Those are what I 
 Now once we're good with the template structure in general, let's take a look at a single layout:
 
 ```jsx
-`q w e r t y u i o p --.5 a s d f g h j k l --.5 m1a--1.25 --.25 z x c v b n m --.25 backspace--1.25 m1--2.5 space--5 return--2.5`
+`q w e r t y u i o p --.5 a s d f g h j k l --.5 $m1a--1.25 --.25 z x c v b n m --.25 $backspace--1.25 $m1--2.5 $space--5 $return--2.5`
 ```
 
-It's written as a set of symbols separated with spaces. Mostly symbols represent key values like `q w e`, except the specials which reference the keys with the special functionality (see the top section). 
+It's written as a set of symbols separated with spaces. Mostly symbols represent key values like `q w e`, except the specials. They start with a `$` prefix; those are the keys with the special functionality, eg `$backspace` (for the full list see the top section). 
 
-You have probably noticed the `--` symbol and a number after it. This notation defines a **ratio of a key** relative to the other keys in a row. So If you see the `space--5` it means to render a space key 5 times wider than a single key. If the number is omitted – ratio 1 will be applied for that key. Think of it as of [flex-grow](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow) if you're familiar with CSS Flexbox. You can also **skip the value** but specify a ratio like this `--2`. In that case an empty spacer element will be rendered with a width set to 2.
+You have probably noticed the `--` symbol and a number after it. This notation defines a **ratio of a key** relative to the other keys in a row. So If you see the `$space--5` it means to render a space key 5 times wider than a single key. If the number is omitted – ratio 1 will be applied for that key. Think of it as of [flex-grow](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow) if you're familiar with CSS Flexbox. You can also **skip the value** but specify a ratio like this `--2`. In that case an empty spacer element will be rendered with a width set to 2.
 
 #### Using custom keys
 
-You can use just any number of **custom keys** beside the default one. Just name custom keys properly and include those names into the layout template as described above.
+You can use just any number of **custom keys** beside the default one. Just name custom keys properly, starting with a `$` prefix, and include those names into the layout template as described above.
 
 ### Known issues and updates
 

@@ -90,76 +90,71 @@ export function Keyboard({
     }
 
     function renderTemplate(val, i) {
-        let keyTemplate
-        switch (val) {
-            case "":
-                return undefined
+        if (val === "") return undefined
+        const templ = new RegExp(/\$\w+/g)
+        const isSpecial = templ.test(val)
+        if (isSpecial) {
+            // If the special character used
+            // Check if keyTemplate exists
+            const keyTemplate = findTemplate(keysTemplates, val)
+            if (!keyTemplate[0]) return undefined
+            switch (val) {
+                case "$backspace":
+                    return React.cloneElement(keyTemplate[0], {
+                        style: keyStyle,
+                        onTap() {
+                            removeValue()
+                        },
+                    })
+                case "$space":
+                    return React.cloneElement(keyTemplate[0], {
+                        style: keyStyle,
+                        onTap() {
+                            addValue(" ")
+                        },
+                    })
+                case "$return":
+                    return React.cloneElement(keyTemplate[0], {
+                        style: keyStyle,
+                        onTap() {
+                            addValue("\n")
+                        },
+                    })
+                case "$m1":
+                case "$m2":
+                    return React.cloneElement(keyTemplate[0], {
+                        style: keyStyle,
+                        onTap() {
+                            cycleMod()
+                        },
+                    })
+                case "$m1a":
+                case "$m1b":
+                case "$m2a":
+                case "$m2b":
+                    return React.cloneElement(keyTemplate[0], {
+                        style: keyStyle,
+                        onTap() {
+                            cycleSub()
+                        },
+                    })
+                default:
+                    return React.cloneElement(keyTemplate[0], {
+                        style: keyStyle,
+                    })
+            }
+        } else {
+            // If regular text used
+            const keyTemplate = findTemplate(keysTemplates, "$value")
+            if (!keyTemplate[0]) return undefined
 
-            case "backspace":
-                keyTemplate = findTemplate(keysTemplates, val)
-                return keyTemplate[0]
-                    ? React.cloneElement(keyTemplate[0], {
-                          style: keyStyle,
-                          onTap() {
-                              removeValue()
-                          },
-                      })
-                    : undefined
-            case "space":
-                keyTemplate = findTemplate(keysTemplates, val)
-                return keyTemplate[0]
-                    ? React.cloneElement(keyTemplate[0], {
-                          style: keyStyle,
-                          onTap() {
-                              addValue(" ")
-                          },
-                      })
-                    : undefined
-            case "return":
-                keyTemplate = findTemplate(keysTemplates, val)
-                return keyTemplate[0]
-                    ? React.cloneElement(keyTemplate[0], {
-                          style: keyStyle,
-                          onTap() {
-                              addValue("\n")
-                          },
-                      })
-                    : undefined
-            case "m1":
-            case "m2":
-                keyTemplate = findTemplate(keysTemplates, val)
-                return keyTemplate[0]
-                    ? React.cloneElement(keyTemplate[0], {
-                          style: keyStyle,
-                          onTap() {
-                              cycleMod()
-                          },
-                      })
-                    : undefined
-            case "m1a":
-            case "m1b":
-            case "m2a":
-            case "m2b":
-                keyTemplate = findTemplate(keysTemplates, val)
-                return keyTemplate[0]
-                    ? React.cloneElement(keyTemplate[0], {
-                          style: keyStyle,
-                          onTap() {
-                              cycleSub()
-                          },
-                      })
-                    : undefined
-            default:
-                keyTemplate = findTemplate(keysTemplates, "value")
-                return keyTemplate[0]
-                    ? React.cloneElement(keyTemplate[0], {
-                          style: keyStyle,
-                          value: val,
-                          onTap() {
-                              addValue(val)
-                          },
-                      })
-                    : undefined
+            return React.cloneElement(keyTemplate[0], {
+                style: keyStyle,
+                value: val,
+                onTap() {
+                    addValue(val)
+                },
+            })
         }
     }
     return (
@@ -202,16 +197,16 @@ Keyboard.defaultProps = {
     templates: {
         numeric_iOS: {
             keys: {
-                m1a: "1 2 3 4 5 6 7 8 9 0 00 backspace",
+                m1a: "1 2 3 4 5 6 7 8 9 0 00 $backspace",
             },
             inRow: 3,
         },
         text_iOS: {
             keys: {
-                m1a: `q w e r t y u i o p --.5 a s d f g h j k l --.5 m1a--1.25 --.25 z x c v b n m --.25 backspace--1.25 m1--2.5 space--5 return--2.5`,
-                m1b: `Q W E R T Y U I O P --.5 A S D F G H J K L --.5 m1b--1.25 --.25 Z X C V B N M --.25 backspace--1.25 m1--2.5 space--5 return--2.5`,
-                m2a: `1 2 3 4 5 6 7 8 9 0 - / : ; ( ) $ & @ " m2a--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 m2--2.5 space--5 return--2.5`,
-                m2b: `[ ] { } # % ^ * + = _ / | ~ < > € $ £ ∙ m2b--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 backspace--1.25 m2--2.5 space--5 return--2.5`,
+                m1a: `q w e r t y u i o p --.5 a s d f g h j k l --.5 $m1a--1.25 --.25 z x c v b n m --.25 $backspace--1.25 $m1--2.5 $space--5 $return--2.5`,
+                m1b: `Q W E R T Y U I O P --.5 A S D F G H J K L --.5 $m1b--1.25 --.25 Z X C V B N M --.25 $backspace--1.25 $m1--2.5 $space--5 $return--2.5`,
+                m2a: `1 2 3 4 5 6 7 8 9 0 - / : ; ( ) $ & @ " $m2a--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 $backspace--1.25 $m2--2.5 $space--5 $return--2.5`,
+                m2b: `[ ] { } # % ^ * + = _ / | ~ < > € $ £ ∙ $m2b--1.25 --.25 .--1.4 ,--1.4 ?--1.4 !--1.4 '--1.4 --.25 $backspace--1.25 $m2--2.5 $space--5 $return--2.5`,
             },
             inRow: 10,
         },
