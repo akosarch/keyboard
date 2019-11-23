@@ -30,7 +30,7 @@ export function Keyboard({
             .then(json => (customTemplate = json))
     }
 
-    // render elements
+    // Render elements
     useEffect(() => {
         const temp =
             template === "custom" ? customTemplate : templates[template]
@@ -58,17 +58,17 @@ export function Keyboard({
         setElements(elem)
     }, [template, customTemplate, mod, sub, keysTemplates])
 
-    // callback on value change
+    // Callback on value change
     useEffect(() => {
         onValueChange(value)
     }, [value])
 
-    // callback on value change
+    // Callback on value change
     useEffect(() => {
         setValue(initialValue)
     }, [initialValue])
 
-    // callback on mod change
+    // Callback on mod change
     useEffect(() => {
         setMod && cycleMod(setMod)
         setSub && cycleSub(setSub)
@@ -126,6 +126,7 @@ export function Keyboard({
                         style: keyStyle,
                         onTap() {
                             cycleMod()
+                            cycleSub(0)
                         },
                     })
                 case "$m1a":
